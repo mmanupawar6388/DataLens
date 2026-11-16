@@ -3,20 +3,18 @@ import logging
 import os
 
 import httpx
+import streamlit as st
 from dotenv import load_dotenv
 from google import genai
 from google.genai import errors as genai_errors
+from streamlit.errors import StreamlitSecretNotFoundError
 
 # Load environment variables from the project root
 load_dotenv()
 
-API_KEY = os.getenv("GEMINI_API_KEY")
 MODEL_NAME = "gemini-3.5-flash-lite"
 
 client = None
-
-if API_KEY:
-    client = genai.Client(api_key=API_KEY)
 
 logger = logging.getLogger(__name__)
 
@@ -27,10 +25,24 @@ def generate_response(prompt: str) -> str:
     Returns an error message if the API request fails.
     """
 
-    if client is None:
-        return "Gemini API key is missing. Set GEMINI_API_KEY in your .env file to enable AI answers."
+    global client
 
     try:
+        if client is None:
+            api_key = os.getenv("GEMINI_API_KEY")
+            if not api_key:
+                try:
+                    api_key = st.secrets.get("GEMINI_API_KEY")
+                except StreamlitSecretNotFoundError:
+                    api_key = None
+
+            if not api_key:
+                return (
+                    "Gemini API key is missing. Set GEMINI_API_KEY in Streamlit "
+                    "Secrets for the hosted app, or in .env for local use."
+                )
+            client = genai.Client(api_key=api_key)
+
         response = client.models.generate_content(
             model=MODEL_NAME,
             contents=prompt
