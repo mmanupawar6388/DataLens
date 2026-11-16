@@ -4,6 +4,8 @@
 
 DataLens is a Streamlit-based application that helps users upload CSV datasets, understand their structure, clean data, explore trends and ask questions using a Gemini-powered AI assistant.
 
+**Live demo:** [Try DataLens](https://datalens-b8ptmnzbhk2s8f2nii32d8.streamlit.app/)
+
 ## Features
 
 - CSV file upload and preview
