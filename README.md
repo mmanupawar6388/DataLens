@@ -1,4 +1,5 @@
 # DataLens
+<<<<<<< HEAD
 
 **CSV Analysis, Data Cleaning, Exploratory Data Analysis and AI Assistant**
 
@@ -50,3 +51,6 @@ DataLens v1.0 — Development and testing in progress.
 ## Author
 
 Manu Pawar
+=======
+DataLens Website
+>>>>>>> origin/main
