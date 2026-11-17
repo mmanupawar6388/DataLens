@@ -148,7 +148,10 @@ def answer_revenue_question(df, question):
         return total_response(mask, f" for {col} = {value}")
 
     revenue_groups = r"((?:product\s+)?category|city)"
-    grouped_pattern = prefix + r"(?:total\s+)?revenue\s+by\s+" + revenue_groups
+    grouped_pattern = (
+        prefix + r"(?:total\s+)?revenue\s+(?:by|contribution\s+of\s+each)\s+"
+        + revenue_groups
+    )
     ranked_pattern = (
         rf"(?:which|what)\s+{revenue_groups}\s+(?:has|had|generated|generates)\s+"
         r"(?:the\s+)?(highest|lowest|most|least|maximum|minimum)\s+"
