@@ -117,7 +117,8 @@ def answer_revenue_question(df, question):
     if re.fullmatch(total_pattern, q, re.I):
         return total_response(pd.Series(True, index=df.index), "")
 
-    filtered = re.fullmatch(total_pattern + r"\s+(?:for|in|from)\s+(.+)", q, re.I)
+    filtered_pattern = total_pattern + r"\s+(?:for|in|from)\s+(.+)"
+    filtered = re.fullmatch(filtered_pattern, q, re.I)
     if filtered:
         target = filtered.group(1).strip()
         explicit_column = None
@@ -146,11 +147,43 @@ def answer_revenue_question(df, question):
         value = str(df.loc[mask, col].iloc[0])
         return total_response(mask, f" for {col} = {value}")
 
-    grouped = re.fullmatch(prefix + r"(?:total\s+)?revenue\s+by\s+(category|city)", q, re.I)
-    ranked = re.fullmatch(
-        r"(?:which|what)\s+(category|city)\s+(?:has|had|generated|generates)\s+(?:the\s+)?(highest|lowest|most|least|maximum|minimum)\s+(?:total\s+)?revenue",
-        q, re.I
+    grouped_pattern = prefix + r"(?:total\s+)?revenue\s+by\s+(category|city)"
+    ranked_pattern = (
+        r"(?:which|what)\s+(category|city)\s+(?:has|had|generated|generates)\s+"
+        r"(?:the\s+)?(highest|lowest|most|least|maximum|minimum)\s+"
+        r"(?:total\s+)?revenue"
     )
+    grouped = re.fullmatch(grouped_pattern, q, re.I)
+    ranked = re.fullmatch(ranked_pattern, q, re.I)
+
+    combined = re.fullmatch(r"(.+?)\s+and\s+(.+)", q, re.I)
+    if combined:
+        parts = [part.strip().rstrip("?.!,").strip() for part in combined.groups()]
+        supported_patterns = (
+            total_pattern,
+            filtered_pattern,
+            grouped_pattern,
+            ranked_pattern,
+        )
+        if all(
+            any(re.fullmatch(pattern, part, re.I) for pattern in supported_patterns)
+            for part in parts
+        ):
+            responses = [answer_revenue_question(df, part) for part in parts]
+            text = " ".join(response["text"] for response in responses)
+            table_response = next(
+                (response for response in responses if response["table"] is not None),
+                None,
+            )
+            if table_response:
+                return make_response(
+                    text,
+                    table_response["table"],
+                    table_response["table_title"],
+                    table_response["show_index"],
+                )
+            return make_response(text)
+
     if grouped or ranked:
         key = (grouped or ranked).group(1).casefold()
         if key not in columns:
