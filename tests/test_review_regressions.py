@@ -85,6 +85,23 @@ class ReviewRegressionTests(unittest.TestCase):
         self.assertEqual(dashboard_category.sum(), 100)
         self.assertEqual(dashboard_city.sum(), 100)
 
+    def test_combined_category_ranking_and_breakdown_share_one_table(self):
+        df = pd.DataFrame({
+            "category": ["Stationery", "Home"],
+            "revenue": [20, 10],
+        })
+
+        response = answer_question(
+            df,
+            "Which product category generates the highest revenue, "
+            "and what is the total revenue contribution of each category?",
+        )
+
+        self.assertIn("Stationery", response["text"])
+        self.assertIn("20.00", response["text"])
+        self.assertEqual(response["table_title"], "Revenue by Category")
+        self.assertEqual(response["table"]["Total Revenue"].tolist(), [20, 10])
+
     def test_combined_breakdowns_request_separate_tables(self):
         df = pd.DataFrame({
             "category": ["Stationery"],
