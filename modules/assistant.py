@@ -147,9 +147,10 @@ def answer_revenue_question(df, question):
         value = str(df.loc[mask, col].iloc[0])
         return total_response(mask, f" for {col} = {value}")
 
-    grouped_pattern = prefix + r"(?:total\s+)?revenue\s+by\s+(category|city)"
+    revenue_groups = r"((?:product\s+)?category|city)"
+    grouped_pattern = prefix + r"(?:total\s+)?revenue\s+by\s+" + revenue_groups
     ranked_pattern = (
-        r"(?:which|what)\s+(category|city)\s+(?:has|had|generated|generates)\s+"
+        rf"(?:which|what)\s+{revenue_groups}\s+(?:has|had|generated|generates)\s+"
         r"(?:the\s+)?(highest|lowest|most|least|maximum|minimum)\s+"
         r"(?:total\s+)?revenue"
     )
@@ -185,7 +186,7 @@ def answer_revenue_question(df, question):
             return make_response(text)
 
     if grouped or ranked:
-        key = (grouped or ranked).group(1).casefold()
+        key = (grouped or ranked).group(1).casefold().split()[-1]
         if key not in columns:
             return make_response(f"This dataset has no {key} column.")
         groups = df[columns[key]].astype("string").fillna("(Missing)")
