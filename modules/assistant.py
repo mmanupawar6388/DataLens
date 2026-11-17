@@ -77,7 +77,7 @@ def answer_revenue_question(df, question):
     """Calculate supported revenue queries; never silently discard filters.
 
     Deliberately bounded grammar: totals, one exact categorical filter,
-    and category/city totals or highest/lowest totals. Other revenue
+    and category, city, or product totals and rankings. Other revenue
     requests receive a clarification instead of an unrelated statistic.
     """
     q = re.sub(r"\s+", " ", question.strip()).rstrip("?.!").strip()
@@ -147,7 +147,7 @@ def answer_revenue_question(df, question):
         value = str(df.loc[mask, col].iloc[0])
         return total_response(mask, f" for {col} = {value}")
 
-    revenue_groups = r"((?:product\s+)?category|city)"
+    revenue_groups = r"((?:product\s+)?category|city|product)"
     grouped_pattern = (
         prefix + r"(?:total\s+)?revenue\s+(?:by|contribution\s+of\s+each)\s+"
         + revenue_groups
@@ -212,7 +212,7 @@ def answer_revenue_question(df, question):
     return make_response(
         "I cannot reliably calculate that revenue request yet. Try 'total revenue', "
         "'total revenue for Mysuru', 'revenue by category', or "
-        "'which city has the highest revenue?'. Filters, date ranges, and comparisons "
+        "'which product generated the highest revenue?'. Filters, date ranges, and comparisons "
         "outside these supported forms will not be silently ignored."
     )
 
