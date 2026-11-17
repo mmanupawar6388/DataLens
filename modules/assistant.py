@@ -588,10 +588,11 @@ def render_assistant(df):
                         hide_index=not response.get("show_index", False)
                     )
 
-    # Chat input
-    question = st.chat_input(
-        "Ask something about your dataset..."
-    )
+    # Keep the input inline so Streamlit does not scroll the dashboard to chat.
+    with st.container():
+        question = st.chat_input(
+            "Ask something about your dataset..."
+        )
 
     if question:
 
