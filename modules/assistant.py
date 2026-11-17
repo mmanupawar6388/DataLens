@@ -179,12 +179,17 @@ def answer_revenue_question(df, question):
             table_responses = [
                 response for response in responses if response["table"] is not None
             ]
-            if len(table_responses) > 1:
+            table_response = table_responses[0] if table_responses else None
+            if table_response and any(
+                response["table_title"] != table_response["table_title"]
+                or response["show_index"] != table_response["show_index"]
+                or not response["table"].equals(table_response["table"])
+                for response in table_responses[1:]
+            ):
                 return make_response(
                     "I can show one table per response. Please ask for each "
                     "breakdown separately."
                 )
-            table_response = table_responses[0] if table_responses else None
             if table_response:
                 return make_response(
                     text,
