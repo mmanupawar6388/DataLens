@@ -1,28 +1,34 @@
 # DataLens
 
-**CSV Analysis, Data Cleaning, Exploratory Data Analysis and AI Assistant**
+**Turn sales CSVs into clear metrics, useful breakdowns, and natural-language answers.**
 
-DataLens is a Streamlit-based application that helps users upload CSV datasets, understand their structure, clean data, explore trends and ask questions using a Gemini-powered AI assistant.
+DataLens is a Streamlit app for exploring and cleaning CSV datasets. It combines dataset profiling and sales analytics with an assistant that answers supported revenue questions directly and uses Gemini for questions that need a broader explanation.
 
-**Live demo:** [Try DataLens](https://datalens-b8ptmnzbhk2s8f2nii32d8.streamlit.app/)
+**[Open the live demo](https://datalens-b8ptmnzbhk2s8f2nii32d8.streamlit.app/)**
+
+## Screenshots
+
+### Sales dashboard
+
+![DataLens dashboard with dataset overview and sales KPIs](screenshots/dashboard-overview.png)
+
+### Revenue question and breakdown
+
+![The assistant identifies Stationery as the highest-revenue category and displays one four-row Revenue by Category table](screenshots/assistant-revenue-by-category.png)
 
 ## Features
 
-- CSV file upload and preview
-- Automated dataset profiling
-- Missing-value and duplicate detection
-- Data cleaning and cleaned CSV export
-- Exploratory data analysis and visualizations
-- AI-powered natural-language questions about datasets
-- Dataset-based business insights
+- Upload and preview CSV files, with row, column, missing-value, and duplicate summaries
+- Clean missing values and duplicate rows, then export the cleaned dataset
+- Explore revenue by category and city, price distributions, and revenue trends
+- Ask natural-language questions about sales and dataset contents
+- Get automatic business insights and key sales metrics
 
 ## Technology Stack
 
-- Python
-- Streamlit
+- Python and Streamlit
 - Pandas and NumPy
-- Google Gemini API
-- Matplotlib / Plotly (where used)
+- Google Gemini API for unsupported questions
 
 ## Installation
 
@@ -49,8 +55,8 @@ Do not upload confidential or sensitive datasets to the AI assistant without an 
 
 ## Project Status
 
-DataLens v1.0 — Development and testing in progress.
+DataLens v1.0 is live on Streamlit Community Cloud as a portfolio project. Feedback and bug reports are welcome through GitHub.
 
 ## Author
 
-Manu Pawar
+[Manu Pawar](https://github.com/mmanupawar6388)
