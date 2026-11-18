@@ -135,6 +135,13 @@ if st.session_state.dataset_hash != current_dataset_hash:
 
 df = st.session_state.df
 
+if df.empty:
+    st.warning(
+        "No rows remain after data cleaning. Upload the CSV again or choose "
+        "a different missing-value action."
+    )
+    st.stop()
+
 st.success(
     "Dataset loaded successfully!"
 )

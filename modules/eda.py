@@ -65,6 +65,19 @@ def _find_order_id_column(data):
     )
 
 
+def _revenue_by_group(data, group_column):
+    if group_column not in data.columns or "revenue" not in data.columns:
+        return pd.Series(dtype="float64")
+
+    groups = data[group_column].astype("string").fillna("(Missing)")
+    return (
+        pd.DataFrame({"Group": groups, "Revenue": data["revenue"]})
+        .groupby("Group")["Revenue"]
+        .sum(min_count=1)
+        .sort_values(ascending=False)
+    )
+
+
 # =========================================================
 # KPI CALCULATIONS
 # =========================================================
@@ -157,12 +170,7 @@ def get_business_insights(df):
         "category" in data.columns
         and "revenue" in data.columns
     ):
-        category_revenue = (
-            data.groupby("category")["revenue"]
-            .sum(min_count=1)
-            .dropna()
-            .sort_values(ascending=False)
-        )
+        category_revenue = _revenue_by_group(data, "category")
 
         if not category_revenue.empty:
             top_revenue = category_revenue.max()
@@ -182,12 +190,7 @@ def get_business_insights(df):
         "city" in data.columns
         and "revenue" in data.columns
     ):
-        city_revenue = (
-            data.groupby("city")["revenue"]
-            .sum(min_count=1)
-            .dropna()
-            .sort_values(ascending=False)
-        )
+        city_revenue = _revenue_by_group(data, "city")
 
         if not city_revenue.empty:
             top_city_revenue = city_revenue.max()
@@ -268,11 +271,7 @@ def sales_by_category(df):
     ):
         return pd.Series(dtype="float64")
 
-    return (
-        data.groupby("category")["revenue"]
-        .sum(min_count=1)
-        .sort_values(ascending=False)
-    )
+    return _revenue_by_group(data, "category")
 
 
 # =========================================================
@@ -295,11 +294,7 @@ def sales_by_city(df):
     ):
         return pd.Series(dtype="float64")
 
-    return (
-        data.groupby("city")["revenue"]
-        .sum(min_count=1)
-        .sort_values(ascending=False)
-    )
+    return _revenue_by_group(data, "city")
 
 
 # =========================================================

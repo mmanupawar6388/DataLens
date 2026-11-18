@@ -43,6 +43,8 @@ DataLens is a Streamlit-based application that helps users upload CSV datasets, 
 
 Never commit your `.env` file or expose your Gemini API key.
 
+For unsupported questions, DataLens sends your question and a dataset summary to Gemini. The summary contains column names and types, row, duplicate, missing, and unique-value counts, and numeric aggregates only for columns with at least five non-missing values. Raw rows and categorical values are not sent.
+
 Do not upload confidential or sensitive datasets to the AI assistant without an appropriate data privacy policy.
 
 ## Project Status
